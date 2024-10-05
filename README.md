@@ -88,6 +88,23 @@ export default function CounterComponent() {
 }
 ```
 
+## Navigator : static property
+
+> you may encounter `navigator` property whene using stores it's just and feature that take a navigator function that use to manage routing in react and use it anywhere and it's a static property in the Store by default it is a void function but you can assigne it any time
+
+### example
+
+```javascript
+import { Store } from "react-data-stores";
+import { useNavigate } from "react-router-dom";
+export default function X() {
+  Store.navigator = useNavigate();
+  return <p>hello</p>;
+}
+```
+
+> now any where in your app you can use this navigator methode by importing the class and call navigator from it
+
 ## API
 
 ### `Store`
