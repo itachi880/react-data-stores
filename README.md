@@ -1,4 +1,4 @@
-# Simple Store
+# React data stores
 
 A simple state management solution that allows you to create a centralized store for your application. This package provides a `Store` class to manage state and listen for changes.
 
@@ -7,7 +7,7 @@ A simple state management solution that allows you to create a centralized store
 You can install this package via npm:
 
 ```bash
-npm install simple-store
+npm install react-data-stores
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ npm install simple-store
 You can create a new store instance by passing an initial state to the `Store` class.
 
 ```javascript
-import Store from "simple-store";
+import Store from "react-data-stores";
 
 const dataStore = new Store({ counter: 0 });
 ```
@@ -63,12 +63,13 @@ export default function CounterComponent() {
   const [data, setData] = useState(dataStore.getState());
 
   useEffect(() => {
+    //you have to subscribe this component to the store envents to benefit from the ui updates if the data on the store change
     const unsubscribe = dataStore.subscribe(setData);
     return () => {
       unsubscribe();
     };
   }, []);
-  //the reason you have to use use effect is you want the unsubscribe to happen after the unmount of the component
+  //the reason you have to use use effect is you want the unsubscribe to happen after the unmount of the component (for performence and avoiding errors)
   return (
     <div>
       <button onClick={() => dataStore.setState({ counter: data.counter + 1 })}>Increase {data.counter}</button>
@@ -85,6 +86,7 @@ export default function CounterComponent() {
 
   - **Parameters:**
     - `initialState`: An object representing the initial state of the store.
+      > the data my be some thing other than object
 
 - **Methods:**
   - `getState()`: Returns the current state of the store.
