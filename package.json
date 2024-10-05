@@ -15,5 +15,12 @@
   "bugs": {
     "url": "https://github.com/itachi880/react-data-stores/issues"
   },
-  "homepage": "https://github.com/itachi880/react-data-stores#readme"
+  "homepage": "https://github.com/itachi880/react-data-stores#readme",
+  "keywords": [
+    "react-data-stores",
+    "redux",
+    "state managment",
+    "react state",
+    "react"
+  ]
 }
