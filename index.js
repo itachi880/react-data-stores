@@ -36,9 +36,9 @@
 class Store {
   #state = null;
   #listeners = [];
+  static navigator = () => {};
   constructor(initialState) {
     this.#state = initialState;
-    this.navigator = () => {};
   }
   getState() {
     return this.#state;
