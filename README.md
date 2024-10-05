@@ -95,7 +95,7 @@ export default function CounterComponent() {
 ### example
 
 ```javascript
-import { Store } from "react-data-stores";
+import Store from "react-data-stores";
 import { useNavigate } from "react-router-dom";
 export default function X() {
   Store.navigator = useNavigate();
