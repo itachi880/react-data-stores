@@ -1,6 +1,6 @@
 # React data stores
 
-A simple state management solution that allows you to create a centralized store for your application. This package provides a `Store` class to manage state and listen for changes.
+A simple state management solution that allows you to create a centralized stores for your application. This package provides a `Store` class to manage state and listen for changes.
 
 ## Installation
 
@@ -40,7 +40,9 @@ dataStore.setState({ counter: 1 });
 
 ### Subscribing to State Changes
 
-You can listen for state changes by subscribing to the store. The `subscribe` method takes a callback function that will be called whenever the state changes.
+You can listen for state changes by subscribing to the store. The `subscribe` method takes a callback function that will be called whenever the state changes. and you have to pass a setter as the callback to make the component respond to state changes
+
+> the `subscribe` methode return the `unsubscribe` methode wich do what it named unsubscribe the component from notifications about the state update
 
 ```javascript
 const unsubscribe = dataStore.subscribe((newState) => {
@@ -51,7 +53,7 @@ const unsubscribe = dataStore.subscribe((newState) => {
 unsubscribe();
 ```
 
-### Example Component
+### Example in real use case
 
 Here’s an example of how to use the `Store` class in a React component:
 
@@ -60,10 +62,13 @@ import React, { useState, useEffect } from "react";
 import { dataStore } from "./dataStore"; // Import your Store instance
 
 export default function CounterComponent() {
+  //get the current state of the store
   const [data, setData] = useState(dataStore.getState());
 
   useEffect(() => {
     //you have to subscribe this component to the store envents to benefit from the ui updates if the data on the store change
+
+    //and to subscribe you can pass any call back function but the ui will not update unless you subscribe with a setter
     const unsubscribe = dataStore.subscribe(setData);
     return () => {
       unsubscribe();
@@ -72,7 +77,12 @@ export default function CounterComponent() {
   //the reason you have to use use effect is you want the unsubscribe to happen after the unmount of the component (for performence and avoiding errors)
   return (
     <div>
-      <button onClick={() => dataStore.setState({ counter: data.counter + 1 })}>Increase {data.counter}</button>
+      <button onClick={() => dataStore.setState({ counter: data.counter + 1 })}>
+        {/*up to this far the onclick event will inform any 
+            component that is subscribe to the store changes  that the 
+            state has been change and what the change is*/}
+        Increase {data.counter}
+      </button>
     </div>
   );
 }
