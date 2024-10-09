@@ -10,7 +10,7 @@ You can install this package via npm:
 npm install react-data-stores
 ```
 
-## Usage
+## Usage (OLD WAY but stil there)
 
 ### Creating a Store
 
@@ -88,6 +88,75 @@ export default function CounterComponent() {
 }
 ```
 
+## Usage (NEW WAY)
+
+### Creating a Store
+
+You can create a new store by passing an initial state to the `createStore` function.
+
+```javascript
+import createStore from "react-data-stores";
+
+const dataStore = createStore({ counter: 0 });
+```
+
+### Accessing State
+
+To access the current state of the store, use the `useStore` method.
+
+```javascript
+const [currentState, setState] = dataStore.useStore(); // [{ counter: 0 },setter function(){}]
+```
+
+### Updating State
+
+You can update the state using the `setState` method. This method takes an object containing the new state values.
+
+```javascript
+const [currentState, setState] = dataStore.useStore(); // [{ counter: 0 },setter function(){}]
+
+setState({ counter: 1 });
+```
+
+### subscription to changes
+
+> in the old version it is nessecary to `subscribe` to update events now you dont need to doit but the old way still existe
+
+### Example in real use case
+
+Here’s an example of how to create and use the `store` in a React component:
+
+```javascript
+//dataStore.js
+
+import createStore from "react-data-stores";
+
+export const dataStore = createStore({ counter: 0 });
+
+//CounterComponent.js
+
+import React, { useState, useEffect } from "react";
+import { dataStore } from "./dataStore"; // Import your Store
+
+export default function CounterComponent() {
+  //get the current state of the store
+  const [data, setData] = dataStore.useStore();
+
+  return (
+    <div>
+      <button onClick={() => setData({ counter: data.counter + 1 })}>
+        {/*up to this far the onclick event will inform any 
+            component that is subscribe to the store changes  that the 
+            state has been change and what the change is*/}
+        Increase {data.counter}
+      </button>
+    </div>
+  );
+}
+```
+
+as you see alot more simpler and cleaner than the old way
+
 ## Navigator : static property
 
 > you may encounter `navigator` property whene using stores it's just and feature that take a navigator function that use to manage routing in react and use it anywhere and it's a static property in the Store by default it is a void function but you can assigne it any time
@@ -119,6 +188,16 @@ export default function X() {
   - `getState()`: Returns the current state of the store.
   - `setState(newState)`: Updates the state with the provided new values.
   - `subscribe(listener)`: Adds a listener function that will be called whenever the state changes. Returns an unsubscribe function.
+
+### `createStore`
+
+- **Constructor:** `createStore(initialState)`
+
+  - **Parameters:**
+    - `initialState`: An object representing the initial state of the store.
+      > the data my be some thing other than object
+  - **Methods:**
+    - `useStore()`: Returns the array of two element first : the state of the store and second : the setter for update the store data.
 
 ## License
 
