@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 /**
  * @description
  * you can use as many stors as you want to have each store manage a deferent kinde of data
@@ -37,23 +38,48 @@ class Store {
   #state = null;
   #listeners = [];
   static navigator = () => {};
+  /**
+   * @template T
+   */
+  /**
+   *
+   * @param {T} initialState
+   */
   constructor(initialState) {
+    /**
+     * @type {typeof initialState}
+     */
     this.#state = initialState;
   }
-  getState() {
+  getState = () => {
     return this.#state;
-  }
+  };
 
-  setState(newState) {
+  setState = (newState) => {
     this.#state = { ...this.#state, ...newState };
     this.#listeners.forEach((listener) => listener(this.#state));
-  }
+  };
 
-  subscribe(listener) {
+  subscribe = (listener) => {
     this.#listeners.push(listener);
     return () => {
       this.#listeners = this.#listeners.filter((l) => l !== listener);
     };
-  }
+  };
 }
-export default Store;
+function createStore(initialState) {
+  const store = new Store(initialState);
+  return {
+    useStore: function () {
+      const [data, setdata] = useState(store.getState());
+      useEffect(() => {
+        const unsubscribe = store.subscribe(setdata);
+        return () => {
+          unsubscribe();
+        };
+      }, []);
+      return [data, store.setState];
+    },
+  };
+}
+export { Store, createStore };
