@@ -1,6 +1,6 @@
 {
   "name": "react-data-stores",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "simple data shairing solution for shair data betwene compognent in react",
   "main": "index.js",
   "scripts": {
