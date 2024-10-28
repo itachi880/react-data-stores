@@ -28,8 +28,7 @@ class Store {
    * @param {Partial<T>} newState - The new state to be merged with the current state.
    */
   setState = (newState) => {
-    this.#state = { ...this.#state, ...newState };
-    this.#listeners.forEach((listener) => listener(this.#state));
+    this.#listeners.forEach((listener) => listener(newState));
   };
 
   /**
@@ -67,7 +66,6 @@ function useStore(store) {
 
 /**
  * Creates a store with the given initial state and returns a hook to use the store.
- *
  * @template T
  * @param {T} initialState - The initial state of the store.
  * @returns {{ useStore: () => [T, (newState: Partial<T>) => void] }} An object containing the `useStore` hook.
