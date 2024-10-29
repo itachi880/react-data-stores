@@ -7,7 +7,9 @@ import { useState, useEffect } from "react";
 class Store {
   #state = null;
   #listeners = [];
-
+  static navigateTo = (path) => {
+    console.log("not initialized yet");
+  };
   /**
    * @param {T} initialState - The initial state of the store.
    */
