@@ -29,8 +29,10 @@ class Store {
    * Updates the state and notifies all listeners.
    * @param {Partial<T>} newState - The new state to be merged with the current state.
    */
-  setState = (newState) => {
-    this.#listeners.forEach((listener) => listener(newState));
+  setState = (newState, replace = false) => {
+    if (replace) this.#state = newState;
+    else this.#state = { ...this.#state, ...newState };
+    this.#listeners.forEach((listener) => listener(this.#state));
   };
 
   /**

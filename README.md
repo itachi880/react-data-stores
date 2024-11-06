@@ -10,85 +10,7 @@ You can install this package via npm:
 npm install react-data-stores
 ```
 
-## Usage (OLD WAY but stil there)
-
-### Creating a Store
-
-You can create a new store instance by passing an initial state to the `Store` class.
-
-```javascript
-import Store from "react-data-stores";
-
-const dataStore = new Store({ counter: 0 });
-```
-
-### Accessing State
-
-To access the current state of the store, use the `getState` method.
-
-```javascript
-const currentState = dataStore.getState(); // { counter: 0 }
-```
-
-### Updating State
-
-You can update the state using the `setState` method. This method takes an object containing the new state values.
-
-```javascript
-dataStore.setState({ counter: 1 });
-```
-
-### Subscribing to State Changes
-
-You can listen for state changes by subscribing to the store. The `subscribe` method takes a callback function that will be called whenever the state changes. and you have to pass a setter as the callback to make the component respond to state changes
-
-> the `subscribe` methode return the `unsubscribe` methode wich do what it named unsubscribe the component from notifications about the state update
-
-```javascript
-const unsubscribe = dataStore.subscribe((newState) => {
-  console.log("State updated:", newState);
-});
-
-// To unsubscribe
-unsubscribe();
-```
-
-### Example in real use case
-
-Here’s an example of how to use the `Store` class in a React component:
-
-```javascript
-import React, { useState, useEffect } from "react";
-import { dataStore } from "./dataStore"; // Import your Store instance
-
-export default function CounterComponent() {
-  //get the current state of the store
-  const [data, setData] = useState(dataStore.getState());
-
-  useEffect(() => {
-    //you have to subscribe this component to the store envents to benefit from the ui updates if the data on the store change
-
-    //and to subscribe you can pass any call back function but the ui will not update unless you subscribe with a setter
-    const unsubscribe = dataStore.subscribe(setData);
-    return () => {
-      unsubscribe();
-    };
-  }, []);
-  //the reason you have to use use effect is you want the unsubscribe to happen after the unmount of the component (for performence and avoiding errors)
-  return (
-    <div>
-      <button onClick={() => dataStore.setState({ counter: data.counter + 1 })}>
-        {/*up to this far the onclick event will inform any 
-            component that is subscribe to the store changes  that the 
-            state has been change and what the change is*/}
-        Increase {data.counter}
-      </button>
-    </div>
-  );
-}
-```
-
-## Usage (NEW WAY)
+## Usage
 
 ### Creating a Store
 
@@ -97,7 +19,7 @@ You can create a new store by passing an initial state to the `createStore` func
 ```javascript
 import createStore from "react-data-stores";
 
-const dataStore = createStore({ counter: 0 });
+const dataStore = createStore({ counter: 0, times: 0 });
 ```
 
 ### Accessing State
@@ -105,7 +27,8 @@ const dataStore = createStore({ counter: 0 });
 To access the current state of the store, use the `useStore` method.
 
 ```javascript
-const [currentState, setState] = dataStore.useStore(); // [{ counter: 0 },setter function(){}]
+const [currentState, setState] = dataStore.useStore();
+// [{ counter: 0 ,times:0},setter function(){}]
 ```
 
 ### Updating State
@@ -115,12 +38,16 @@ You can update the state using the `setState` method. This method takes an objec
 ```javascript
 const [currentState, setState] = dataStore.useStore(); // [{ counter: 0 },setter function(){}]
 
-setState({ counter: 1 });
+setState({ counter: 1 }, true); //state={counter:1}
+setState({ counter: 1 }, false); //state={counter:1,times:0}
 ```
 
-### subscription to changes
+`setState` accept two parameters `first` is the data
+and `second` is a `boolean`
+that indecate is the `new state` sholde overwrite the full store
+or just update the `given keys by the new value`
 
-> in the old version it is nessecary to `subscribe` to update events now you dont need to doit but the old way still existe
+> by default the value is `false` wich means just update and not overwrite the full store data
 
 ### Example in real use case
 
@@ -144,18 +71,18 @@ export default function CounterComponent() {
 
   return (
     <div>
-      <button onClick={() => setData({ counter: data.counter + 1 })}>
-        {/*up to this far the onclick event will inform any 
-            component that is subscribe to the store changes  that the 
-            state has been change and what the change is*/}
+      <button
+      onClick={
+        () => {
+          setData({ counter: data.counter 1 })
+          }
+        }>
         Increase {data.counter}
-      </button>
+    </button>
     </div>
   );
 }
 ```
-
-as you see alot more simpler and cleaner than the old way
 
 ## Navigator : static property
 
@@ -182,11 +109,10 @@ export default function X() {
 
   - **Parameters:**
     - `initialState`: An object representing the initial state of the store.
-      > the data my be some thing other than object
 
 - **Methods:**
   - `getState()`: Returns the current state of the store.
-  - `setState(newState)`: Updates the state with the provided new values.
+  - `setState(newState,overwrite?)`: Updates the state with the provided new values.
   - `subscribe(listener)`: Adds a listener function that will be called whenever the state changes. Returns an unsubscribe function.
 
 ### `createStore`
