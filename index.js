@@ -74,7 +74,7 @@ function useStore(store, properties = { getter: true, setter: true }) {
     };
   }, [store]);
   if (properties?.getter === false) return store.setState;
-  if (properties?.setter === false) return store.state;
+  if (properties?.setter === false) return state;
   return [state, store.setState];
 }
 
