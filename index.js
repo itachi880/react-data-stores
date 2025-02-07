@@ -73,8 +73,8 @@ function useStore(store, properties = { getter: true, setter: true }) {
       unsubscribe();
     };
   }, [store]);
-  if (!properties.getter) return store.setState;
-  if (!properties.setter) return store.state;
+  if (properties.getter === false) return store.setState;
+  if (properties.setter === false) return store.state;
   return [state, store.setState];
 }
 
