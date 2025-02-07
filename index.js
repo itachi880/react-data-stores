@@ -89,7 +89,7 @@ function createStore(initialState) {
   const store = new Store(initialState);
 
   return {
-    useStore: ({ getter = true, setter = true }) =>
+    useStore: ({ getter = true, setter = true } = {}) =>
       useStore(store, { getter, setter }),
   };
 }
