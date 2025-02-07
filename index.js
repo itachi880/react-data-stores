@@ -53,9 +53,13 @@ class Store {
  * A custom hook that allows you to use the store's state in a React component.
  *
  * @param {Store<T>} store - The store instance.
- * @returns {[T, (newState: Partial<T>) => void]} An array containing the current state and the setState function.
+ * @param {{ getter : boolean, setter : boolean }} properties - The store instance.
+ * @returns {T | [(T), (newState: Partial<T>) => void] | ((newState: Partial<T>) => void)}
+ * - Returns the state if `getter: true` & `setter: false`.
+ * - Returns the setState function if `getter: false` & `setter: true`.
+ * - Returns `[state, setState]` if both are `true` or not specified
  */
-function useStore(store) {
+function useStore(store, properties = { getter: true, setter: true }) {
   const [state, setState] = useState(store.getState());
 
   useEffect(() => {
@@ -64,7 +68,8 @@ function useStore(store) {
       unsubscribe();
     };
   }, [store]);
-
+  if (!properties.getter) return store.setState;
+  if (!properties.setter) return store.state;
   return [state, store.setState];
 }
 
@@ -72,14 +77,15 @@ function useStore(store) {
  * Creates a store with the given initial state and returns a hook to use the store.
  * @template T
  * @param {T} initialState - The initial state of the store.
- * @returns {{ useStore: () => [T, (newState: Partial<T>) => void] }} An object containing the `useStore` hook.
+ * @returns {{ useStore: (options?: {getter?: boolean, setter?: boolean}) => (T | [(T), (newState: Partial<T>) => void] | ((newState: Partial<T>) => void)) }}
+ * An object containing the `useStore` hook, which allows components to subscribe to the store.
  */
 function createStore(initialState) {
   const store = new Store(initialState);
 
   return {
-    useStore: () => useStore(store),
+    useStore: ({ getter = true, setter = true }) =>
+      useStore(store, { getter, setter }),
   };
 }
-//comment
 export { Store, createStore };

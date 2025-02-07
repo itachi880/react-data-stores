@@ -27,9 +27,17 @@ const dataStore = createStore({ counter: 0, times: 0 });
 To access the current state of the store, use the `useStore` method.
 
 ```javascript
-const [currentState, setState] = dataStore.useStore();
+const options = {
+  getter: true, //if you want the getter
+  setter: true, //if you want the setter function
+};
+const [currentState, setState] = dataStore.useStore(options);
 // [{ counter: 0 ,times:0},setter function(){}]
 ```
+
+> you have to know that the options are optional by default the return from the `useStore()` will be `[getter,setter]`
+> but if you choose one of the `properties` to be `true` the return will be just the one you choose and the function will not retun a tuple but a single element
+> lastly if you choose both to true is like the `default` when you don't specify thr options
 
 ### Updating State
 
