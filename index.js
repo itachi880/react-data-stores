@@ -28,6 +28,7 @@ class Store {
   /**
    * Updates the state and notifies all listeners.
    * @param {Partial<T>} newState - The new state to be merged with the current state.
+   * @param {boolean} replace - `false` by default , if `true` replace the entire store object with the value you provide `false` replace only the changed parts
    */
   setState = (newState, replace = false) => {
     if (replace) this.#state = newState;
