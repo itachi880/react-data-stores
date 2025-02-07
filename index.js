@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-
 /**
  * @template T
  * A simple store class to hold and manage state.
@@ -26,9 +25,7 @@ class Store {
   };
 
   /**
-   * Updates the state and notifies all listeners.
-   * @param {Partial<T>} newState - The new state to be merged with the current state.
-   * @param {boolean} replace - `false` by default , if `true` replace the entire store object with the value you provide `false` replace only the changed parts
+   * @type {import("./useStore.d.ts").setState<T>}
    */
   setState = (newState, replace = false) => {
     if (replace) this.#state = newState;
@@ -51,15 +48,22 @@ class Store {
 
 /**
  * @template T
+ * @template {boolean} G
+ * @template {boolean} S
+ * @typedef {import("./useStore.d.ts").UseStoreReturn<T, G extends undefined ? true : G, S extends undefined ? true : S>} UseStoreReturn
+ */
+
+/**
+ * @template T
  * A custom hook that allows you to use the store's state in a React component.
- *
  * @param {Store<T>} store - The store instance.
- * @param {{ getter : boolean, setter : boolean }} properties - The store instance.
- * @returns {T | [(T), (newState: Partial<T>) => void] | ((newState: Partial<T>) => void)}
+ * @param {{ getter : G , setter : S }} [properties] -
+ * @returns {UseStoreReturn<T, G , S>}
  * - Returns the state if `getter: true` & `setter: false`.
  * - Returns the setState function if `getter: false` & `setter: true`.
  * - Returns `[state, setState]` if both are `true` or not specified
  */
+
 function useStore(store, properties = { getter: true, setter: true }) {
   const [state, setState] = useState(store.getState());
 
@@ -78,7 +82,7 @@ function useStore(store, properties = { getter: true, setter: true }) {
  * Creates a store with the given initial state and returns a hook to use the store.
  * @template T
  * @param {T} initialState - The initial state of the store.
- * @returns {{ useStore: (options?: {getter?: boolean, setter?: boolean}) => (T | [(T), (newState: Partial<T>) => void] | ((newState: Partial<T>) => void)) }}
+ * @returns {{ useStore: <G extends boolean = true ,  S extends boolean = true >(options?: {getter: G, setter: S}) => UseStoreReturn<T, G , S> }}
  * An object containing the `useStore` hook, which allows components to subscribe to the store.
  */
 function createStore(initialState) {
