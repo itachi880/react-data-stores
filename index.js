@@ -80,10 +80,18 @@ function useStore(store, properties = { getter: true, setter: true }) {
 
 /**
  * Creates a store with the given initial state and returns a hook to use the store.
+ * - `useStore` : is the one you will often use inside your components
+ *
+ * - `setCurrent | getCurrent` : are a helper function inted to let you access and modify the store
+ *  state from any where in your code even if it isn't a react component ex.
+ *  helper functions or utility functions
  * @template T
  * @param {T} initialState - The initial state of the store.
- * @returns {{ useStore: <G extends boolean = true ,  S extends boolean = true >(options?: {getter: G, setter: S}) => UseStoreReturn<T, G , S> }}
- * An object containing the `useStore` hook, which allows components to subscribe to the store.
+ * @returns {{
+ *   setCurrent: (data:T, replace?:boolean) => void ,
+ *   useStore: <G extends boolean = true ,  S extends boolean = true >(options?: {getter: G, setter: S}) => UseStoreReturn<T, G , S> ,
+ *   getCurrent: ()=> T ,
+ * }}
  */
 function createStore(initialState) {
   const store = new Store(initialState);
@@ -91,6 +99,8 @@ function createStore(initialState) {
   return {
     useStore: ({ getter, setter } = {}) =>
       useStore(store, { getter: getter ?? true, setter: setter ?? true }),
+    setCurrent: (data, replace = false) => store.setState(data, replace),
+    getCurrent: () => store.getState(),
   };
 }
 export { Store, createStore };
