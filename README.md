@@ -2,7 +2,7 @@
 
 A simple state management solution that allows you to create a centralized stores for your application. This package provides a `Store` class to manage state and listen for changes.
 
-## Installation
+## 📦 Installation
 
 You can install this package via npm:
 
@@ -10,9 +10,9 @@ You can install this package via npm:
 npm install react-data-stores
 ```
 
-## Usage
+## 🚀 Usage
 
-### Creating a Store
+### 🔧 Creating a Store
 
 You can create a new store by passing an initial state to the `createStore` function.
 
@@ -22,7 +22,7 @@ import createStore from "react-data-stores";
 const dataStore = createStore({ counter: 0, times: 0 });
 ```
 
-### Accessing State
+### 🔍 Accessing State
 
 To access the current state of the store, use the `useStore` method.
 
@@ -35,11 +35,15 @@ const [currentState, setState] = dataStore.useStore(options);
 // [{ counter: 0 ,times:0},setter function(){}]
 ```
 
-> you have to know that the options are optional by default the return from the `useStore()` will be `[getter,setter]`
-> but if you choose one of the `properties` to be `true` the return will be just the one you choose and the function will not retun a tuple but a single element
-> lastly if you choose both to true is like the `default` when you don't specify thr options
+```
+🔸 options is optional.
+🔸 By default, useStore() returns both the getter and setter as a  tuple.
+🔸 If you pass { getter: true } or { setter: true } alone,
+    useStore() will return just that one (not a tuple).
+🔸 If both are true, it’s equivalent to calling useStore() with no options.
+```
 
-### Updating State
+### 🔄 Updating State
 
 You can update the state using the `setState` method. This method takes an object containing the new state values.
 
@@ -57,7 +61,7 @@ or just update the `given keys by the new value`
 
 > by default the value is `false` wich means just update and not overwrite the full store data
 
-### Example in real use case
+### 💡 Real Use Case Example
 
 Here’s an example of how to create and use the `store` in a React component:
 
@@ -92,46 +96,24 @@ export default function CounterComponent() {
 }
 ```
 
-## Navigator : static property
+## 🛠️ Helper Functions: `getCurrent & setCurrent`
 
-> you may encounter `navigator` property whene using stores it's just and feature that take a navigator function that use to manage routing in react and use it anywhere and it's a static property in the Store by default it is a void function but you can assigne it any time
+These functions are available outside of React components, letting you read or update the store without needing to pass setters around.
 
-### example
+> **⚠️ Note** : **`getCurrent()`** returns the state at the time of the call. It won't cause a component to **re-render** when state changes. If you want **reactivity**, use **`useStore()`** instead.
+
+### use case
 
 ```javascript
-import Store from "react-data-stores";
-import { useNavigate } from "react-router-dom";
-export default function X() {
-  Store.navigator = useNavigate();
-  return <p>hello</p>;
+// store/counter.js
+export const counterStore = createStore({ count: 0 });
+
+// utils/counterUtils.js
+export function incrementCounter() {
+  const current = counterStore.getCurrent();
+  counterStore.setCurrent({ count: current.count + 1 });
 }
 ```
-
-> now any where in your app you can use this navigator methode by importing the class and call navigator from it
-
-## API
-
-### `Store`
-
-- **Constructor:** `new Store(initialState)`
-
-  - **Parameters:**
-    - `initialState`: An object representing the initial state of the store.
-
-- **Methods:**
-  - `getState()`: Returns the current state of the store.
-  - `setState(newState,overwrite?)`: Updates the state with the provided new values.
-  - `subscribe(listener)`: Adds a listener function that will be called whenever the state changes. Returns an unsubscribe function.
-
-### `createStore`
-
-- **Constructor:** `createStore(initialState)`
-
-  - **Parameters:**
-    - `initialState`: An object representing the initial state of the store.
-      > the data my be some thing other than object
-  - **Methods:**
-    - `useStore()`: Returns the array of two element first : the state of the store and second : the setter for update the store data.
 
 ## License
 
